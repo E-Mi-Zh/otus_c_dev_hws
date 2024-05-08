@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 				if (!get_filename(f, fname)) {
 					printf("Found ZIP with file %s\n", fname);
 				}
-				break
+				break;
 			case END_OF_CENTRAL_DIRECTORY:
 				printf("ZIP file end (EOCD  record) found.\n");
 				fclose(f);
