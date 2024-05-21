@@ -109,18 +109,18 @@ int check_zip_header(FILE* f) {
 
 	if (fread(buf, 1, ZIP_HEADER_TYPE_LEN, f) < ZIP_HEADER_TYPE_LEN) {
 		fprintf(stderr, "End of file reached.\n");
-		return -1;
+		return(EXIT_FAILURE);
 	}
 	if (!memcmp(buf, zip_file_header, ZIP_HEADER_TYPE_LEN)) {
-		return LOCAL_FILE_HEADER;
+		return(LOCAL_FILE_HEADER);
 	} else {
 		if (!memcmp(buf, zip_eocd_record, ZIP_HEADER_TYPE_LEN)) {
-			return END_OF_CENTRAL_DIRECTORY;
+			return(END_OF_CENTRAL_DIRECTORY);
 		}
 	}
 
 	fseek(f, -ZIP_HEADER_TYPE_LEN, SEEK_CUR);
-	return -1;
+	return(EXIT_FAILURE);
 }
 
 void print_usage(void) {
@@ -135,20 +135,20 @@ int get_filename(FILE* f, unsigned char* fname) {
 	res = fread(&size, 1, ZIP_FILENAME_LEN, f);
 	if (res < ZIP_FILENAME_LEN) {
 		fprintf(stderr, "Failed to read zip filename size: wanted %d, get only %d!\n", ZIP_FILENAME_LEN, res);
-		return -1;
+		return(EXIT_FAILURE);
 	}
 	if (size >= MAX_FILENAME_LENGTH) {
 		size = MAX_FILENAME_LENGTH - 1;
 	}
 	if (fseek(f, 2, SEEK_CUR)) {
 		fprintf(stderr, "Error seeking in file: %s.\n", strerror(errno));
-		return(-1);
+		return(EXIT_FAILURE);
 	}
 	res = fread(fname, 1, size, f);
 	if (res < size) {
 		fprintf(stderr, "Failed to read zip filename: wanted %d, get only %d!\n", size, res);
-		return -1;
+		return(EXIT_FAILURE);
 	}
-	fname[size] = '\0';
-	return 0;
+	fname[res] = '\0';
+	return(EXIT_SUCCESS);
 }
