@@ -1,3 +1,4 @@
-# Otus C developer course homeworks
- * hw_03 - zipjpeg file detect
+# Домашние работы по курсу "Программист Си" от Otus.
+* hw\_03 - детекция zipjpeg файлов
+* hw\_04 - перекодировка из 8-битной кодировки в UTF-8
 
