@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-//#include <ctype.h>
 #include <string.h>
 #include <curl/curl.h>
 #include "parson.h"
@@ -39,7 +38,7 @@ struct MemoryStruct {
 
 
 char url[MAX_URL_LENGTH];
- 
+
 struct MemoryStruct chunk;
 
 int main(int argc, char* argv[])
@@ -49,7 +48,7 @@ int main(int argc, char* argv[])
 
 	/* Анализируем аргументы */
 	place = parse_args(argc, argv);
-	
+
 	/* Запрашиваем данные с сервера */
 	if (!read_data(place)) {
 		fprintf(stderr, "Got empty response from server, exiting.\n");
@@ -61,7 +60,7 @@ int main(int argc, char* argv[])
 
 	/* Выводим результат (прогноз погоды) */
 	print_result(weather_report, place);
- 
+
 	free(chunk.memory);
 
 	exit(EXIT_SUCCESS);
@@ -88,19 +87,19 @@ size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *user
 {
 	size_t realsize = size * nmemb;
 	struct MemoryStruct *mem = (struct MemoryStruct *)userp;
- 
+
 	char *ptr = realloc(mem->memory, mem->size + realsize + 1);
 	if(!ptr) {
 		/* out of memory! */
 		printf("not enough memory (realloc returned NULL)\n");
 		return 0;
 	}
- 
+
 	mem->memory = ptr;
 	memcpy(&(mem->memory[mem->size]), contents, realsize);
 	mem->size += realsize;
 	mem->memory[mem->size] = 0;
- 
+
 	return realsize;
 }
 
@@ -108,7 +107,7 @@ ssize_t read_data(char* place)
 {
 	CURL *curl_handle;
 	CURLcode res;
-	
+
 	char* url;
 	char* url_start = "https://ru.wttr.in/";
 	char* url_end = "?format=j1";
@@ -123,28 +122,28 @@ ssize_t read_data(char* place)
 	url = strcat(url, url_end);
 	chunk.memory = malloc(1);  /* grown as needed by the realloc above */
 	chunk.size = 0;    /* no data at this point */
-	
+
 	curl_global_init(CURL_GLOBAL_ALL);
- 
+
 	/* init the curl session */
 	curl_handle = curl_easy_init();
- 
+
 	/* specify URL to get */
 	curl_easy_setopt(curl_handle, CURLOPT_URL, url);
- 
+
 	/* send all data to this function  */
 	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
- 
+
 	/* we pass our 'chunk' struct to the callback function */
 	curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);
- 
+
 	/* some servers do not like requests that are made without a user-agent
 	   field, so we provide one */
 	curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
- 
+
 	/* get it! */
 	res = curl_easy_perform(curl_handle);
- 
+
 	/* check for errors */
 	if(res != CURLE_OK) {
 		fprintf(stderr, "curl_easy_perform() failed: %s\n",
@@ -161,7 +160,7 @@ ssize_t read_data(char* place)
 
 	/* cleanup curl stuff */
 	curl_easy_cleanup(curl_handle);
-	
+
 	/* we are done with libcurl, so clean it up */
 	curl_global_cleanup();
 
@@ -181,7 +180,7 @@ char* get_js_type_str(JSON_Value_Type typeval) {
 		case JSONError:				/* -1 */
 			return "JSONError";
 		case JSONNull:				/* 1 */
-			return "JSONNull";		
+			return "JSONNull";
 		case JSONString:			/* 2 */
 			return "JSONString";
 		case JSONNumber:			/* 3 */
@@ -196,18 +195,18 @@ char* get_js_type_str(JSON_Value_Type typeval) {
 			return "JSONError";
 	}
 }
-	
+
 void parse_data(const char* json, weather_t* weather_report)
 {
 	JSON_Value *root_value;			/* { ... } */
-    JSON_Object *root_object;		/* "current_condition": [], "nearest_area": [], "request": [], "weather": [] */
+	JSON_Object *root_object;		/* "current_condition": [], "nearest_area": [], "request": [], "weather": [] */
 	JSON_Value *curr_cond_value;	/* [ { ... } ] - array of objects (value of parent current_condition element) */
 	JSON_Array* curr_cond_array;	/* { ... } - actual array (currently with one member) */
-    JSON_Value *value;				/* { ... } - object with current weather "key":"value" pairs */
-    JSON_Object *values;			/* "k":"v", "k":"v", - key-val pairs object */
+	JSON_Value *value;				/* { ... } - object with current weather "key":"value" pairs */
+	JSON_Object *values;			/* "k":"v", "k":"v", - key-val pairs object */
 	JSON_Value *desc_array_value;	/* "weatherDesc": [ { ... } ] - weather description compose element */
 	JSON_Array* desc_array;			/* [ ... ] - actual array from key "weatherDesc" */
-    JSON_Object *desc_object;
+	JSON_Object *desc_object;
 
 	JSON_Value_Type typeval;
 

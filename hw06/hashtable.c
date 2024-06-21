@@ -20,13 +20,13 @@ static unsigned int get_ind(char* word, unsigned int size);
 static unsigned long long hash(char* w);
 
 /* Увеличивает таблицу в EXTEND_FACTOR раз  */
-static hashtable_t* hashtable_extend(hashtable_t* hashtable); 
+static hashtable_t* hashtable_extend(hashtable_t* hashtable);
 
 /* Проверят, свободна ли ячейка или нет */
-static bool empty_cell(wcnt_t* words, char* w, unsigned int ind); 
+static bool empty_cell(wcnt_t* words, char* w, unsigned int ind);
 
 /* Добавляет слово в заданную ячейку массива */
-static void add_word(wcnt_t* words, char* w, unsigned int sz); 
+static void add_word(wcnt_t* words, char* w, unsigned int sz);
 
 /* Расширяет таблицу, копируя старую в новую */
 static hashtable_t* hashtable_extend(hashtable_t* hashtable);
@@ -41,14 +41,14 @@ hashtable_t* hashtable_new(unsigned int size)
 		fprintf(stderr, "Can't allocate hashtable: %s! Exiting...\n", strerror(errno));
 		exit(EXIT_FAILURE);
 	}
-	
+
 	hashtable->words = malloc(size * sizeof(wcnt_t));
 	if (!hashtable->words) {
 		fprintf(stderr, "Can't allocate hashtable words array: %s! Exiting...\n", strerror(errno));
 		free(hashtable);
 		exit(EXIT_FAILURE);
 	}
-	
+
 	hashtable->size = size;
 	hashtable->occ = 0;
 	hashtable->max_occ = size * MAX_LOAD_FACTOR;
@@ -160,12 +160,12 @@ static bool empty_cell(wcnt_t* words, char* w, unsigned int ind)
 		/* пустая ячейка */
 		return true;
 	}
-   
+
 	if (!strcmp(w, words[ind].w)) {
 		/* ячейка с таким же словом */
 		return true;
 	}
-   
+
 	/* коллизия */
 	return false;
 }
@@ -200,4 +200,3 @@ static hashtable_t* hashtable_extend(hashtable_t* hashtable)
 
 	return new_hashtable;
 }
-

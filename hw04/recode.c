@@ -22,7 +22,7 @@ typedef enum {
 
 FILE* fi;
 FILE* fo;
-encoding_t encoding; 
+encoding_t encoding;
 
 void parse_args(int argc, char* argv[]);
 void print_usage(void);
@@ -116,7 +116,7 @@ uint8_t encode_symbol(uint8_t symbol, uint8_t utf8[4]) {
 	uint8_t n_octets;
 
 	/* Определяем символ Юникода по кодовой таблице для данной кодировки */
-	uni_symbol = get_uni_symbol((uint8_t) symbol); 
+	uni_symbol = get_uni_symbol((uint8_t) symbol);
 	/* Определяем количество октетов, необходимых для записи */
 	n_octets = count_octets(uni_symbol);
 	/* Устанавливаем старшие биты октетов */

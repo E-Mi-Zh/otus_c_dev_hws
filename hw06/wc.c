@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 	char w[MAX_WORD_LENGTH];
 	unsigned int i = 0;
 	int c;
-	
+
 	/* Хеш-таблица с массивом слов */
 	hashtable_t* hashtable;
 
