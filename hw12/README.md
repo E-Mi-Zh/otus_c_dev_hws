@@ -1,68 +1,107 @@
-<!--
-Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
+# ДЗ12 - сборка CURL
 
-SPDX-License-Identifier: curl
--->
+## Задание
+Скачать curl последней версии и собрать его в любой UNIX-подобной ОС с поддержкой лишь
+трёх протоколов: HTTP, HTTPS и TELNET.
 
-# [![curl logo](https://curl.se/logo/curl-logo.svg)](https://curl.se/)
+## Цель задания
+Получить опыт сборки программ для UNIX-подобных ОС.
 
-Curl is a command-line tool for transferring data specified with URL
-syntax. Find out how to use curl by reading [the curl.1 man
-page](https://curl.se/docs/manpage.html) or [the MANUAL
-document](https://curl.se/docs/manual.html). Find out how to install Curl
-by reading [the INSTALL document](https://curl.se/docs/install.html).
+## Задачи
+1. Работа осуществляется в UNIX-подобной ОС (любой дистрибутив Linux, любая BSD-система, MacOS).
+2. Скачан и распакован исходный код curl.
+3. Сборка сконфигурирована с поддержкой лишь трёх протоколов HTTP, HTTPS и TELNET.
+4. Осуществлена сборка (установку в систему осуществлять не требуется и не рекомендуется).
+5. Собранный curl запущен с ключом --version для подтверждения корректности сборки.
 
-libcurl is the library curl is using to do its job. It is readily available to
-be used by your software. Read [the libcurl.3 man
-page](https://curl.se/libcurl/c/libcurl.html) to learn how.
+## Решение
 
-You can find answers to the most frequent questions we get in [the FAQ
-document](https://curl.se/docs/faq.html).
+Для сборки скачал и распаковал исходный код curl (https://github.com/curl/curl).
+Целевая система: Ubuntu 23.10, x64, ядро 6.5.0-41, gcc 13.2.0, libc 2.38.
 
-Study [the COPYING file](https://curl.se/docs/copyright.html) for
-distribution terms.
+### configure-скрипт
+```
+autoreconf -fi
 
-## Contact
+./configure --with-openssl --without-msh3 --without-librtmp --without-winidn --without-libidn2 \
+	--without-nghttp2 --without-ngtcp2 --without-openssl-quic --without-nghttp3 --without-quiche \
+	--without-zsh-functions-dir --without-fish-functions-dir --without-libpsl --without-libgsasl \
+	--without-brotli --without-zstd --without-hyper --disable-websockets  --disable-largefile \
+	--disable-ares --disable-httpsrr --disable-hsts --disable-ech --disable-ftp --disable-file \
+	--disable-ldap --disable-ldaps --disable-rtsp --disable-proxy --disable-dict --disable-tftp \
+	--disable-pop3 --disable-imap --disable-smb --disable-smtp --disable-gopher --disable-mqtt \
+	--disable-ipv6 --disable-sspi --disable-aws --disable-ntlm --disable-tls-srp --disable-unix-sockets \
+	--disable-cookies --disable-socketpair --disable-http-auth --disable-doh --disable-mime \
+	--disable-bindlocal --disable-form-api --disable-dateparse --disable-netrc --disable-dnsshuffle \
+	--disable-alt-svc --disable-headers-api --disable-hsts --disable-websockets --disable-docs \
+	--disable-manual --disable-threaded-resolver --disable-pthreads --disable-rt
+```
 
-If you have problems, questions, ideas or suggestions, please contact us by
-posting to a suitable [mailing list](https://curl.se/mail/).
+Вывод:
+```
+configure: Configured to build curl/libcurl:
 
-All contributors to the project are listed in [the THANKS
-document](https://curl.se/docs/thanks.html).
+  Host setup:       x86_64-pc-linux-gnu
+  Install prefix:   /usr/local
+  Compiler:         gcc
+   CFLAGS:          -Werror-implicit-function-declaration -O2 -Wno-system-headers
+   CPPFLAGS:        
+   LDFLAGS:         
+   LIBS:            -lssl -lcrypto -lssl -lcrypto -lz
 
-## Commercial support
+  curl version:     8.9.0-DEV
+  SSL:              enabled (OpenSSL v3+)
+  SSH:              no      (--with-{libssh,libssh2})
+  zlib:             enabled
+  brotli:           no      (--with-brotli)
+  zstd:             no      (--with-zstd)
+  GSS-API:          no      (--with-gssapi)
+  GSASL:            no      (--with-gsasl)
+  TLS-SRP:          no      (--enable-tls-srp)
+  resolver:         default (--enable-ares / --enable-threaded-resolver)
+  IPv6:             no      (--enable-ipv6)
+  Unix sockets:     no      (--enable-unix-sockets)
+  IDN:              no      (--with-{libidn2,winidn})
+  Build docs:       no
+  Build libcurl:    Shared=yes, Static=yes
+  Built-in manual:  no      (--enable-manual)
+  --libcurl option: enabled (--disable-libcurl-option)
+  Verbose errors:   enabled (--disable-verbose)
+  Code coverage:    disabled
+  SSPI:             no      (--enable-sspi)
+  ca cert bundle:   /etc/ssl/certs/ca-certificates.crt
+  ca cert path:     /etc/ssl/certs
+  ca fallback:      no
+  LDAP:             no      (--enable-ldap / --with-ldap-lib / --with-lber-lib)
+  LDAPS:            no      (--enable-ldaps)
+  RTSP:             no      (--enable-rtsp)
+  RTMP:             no      (--with-librtmp)
+  PSL:              no      (--with-libpsl)
+  Alt-svc:          no
+  Headers API:      no      (--enable-headers-api)
+  HSTS:             no      (--enable-hsts)
+  HTTP1:            enabled (internal)
+  HTTP2:            no      (--with-nghttp2)
+  HTTP3:            no      (--with-ngtcp2 --with-nghttp3, --with-quiche, --with-openssl-quic, --with-msh3)
+  ECH:              no      (--enable-ech)
+  WebSockets:       no      (--enable-websockets)
+  Protocols:        HTTP HTTPS IPFS IPNS TELNET
+  Features:         Largefile SSL libz threadsafe
+```
 
-For commercial support, maybe private and dedicated help with your problems or
-applications using (lib)curl visit [the support page](https://curl.se/support.html).
+### Результат сборки
+```
+./src/curl --version
+curl 8.9.0-DEV (x86_64-pc-linux-gnu) libcurl/8.9.0-DEV OpenSSL/3.0.10 zlib/1.2.13
+Release-Date: [unreleased]
+Protocols: http https ipfs ipns telnet
+Features: Largefile libz SSL threadsafe
+```
 
-## Website
+### Поддержка протоколов IPFS и IPNS
+Начиная с версии 8.4.0 в Curl добавлена поддержка протоколов IPFS и IPNS, которая включается автоматически при выборе HTTP.
+На настоящий момент отключить флагом configure её нельзя. Как написал автор Curl (https://curl.se/mail/archive-2023-12/0027.html),
+необходимсоти в этом нет, т.к. в libcurl эта фича не попадает.
 
-Visit the [curl website](https://curl.se/) for the latest news and
-downloads.
-
-## Git
-
-To download the latest source from the Git server, do this:
-
-    git clone https://github.com/curl/curl.git
-
-(you will get a directory named curl created, filled with the source code)
-
-## Security problems
-
-Report suspected security problems via [our HackerOne
-page](https://hackerone.com/curl) and not in public.
-
-## Notice
-
-Curl contains pieces of source code that is Copyright (c) 1998, 1999 Kungliga
-Tekniska Högskolan. This notice is included here to comply with the
-distribution terms.
-
-## Backers
-
-Thank you to all our backers! 🙏 [Become a backer](https://opencollective.com/curl#section-contribute).
-
-## Sponsors
-
-Support this project by becoming a [sponsor](https://curl.se/sponsors.html).
+Если очень надо, то можно найти коммит, который добавлял эту поддержку, добавить опцию в скрипты сборки и обернуть соответсвующий код
+в исходниках в #ifdef'ы.
