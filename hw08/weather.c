@@ -61,6 +61,8 @@ int main(int argc, char* argv[])
 	/* Выводим результат (прогноз погоды) */
 	print_result(weather_report, place);
 
+	free((void*) weather_report.desc);
+	free((void*) weather_report.wind_dir);
 	free(chunk.memory);
 
 	exit(EXIT_SUCCESS);
@@ -163,7 +165,7 @@ ssize_t read_data(char* place)
 
 	/* we are done with libcurl, so clean it up */
 	curl_global_cleanup();
-
+	free(url);
 	return chunk.size;
 }
 
@@ -213,6 +215,7 @@ void parse_data(const char* json, weather_t* weather_report)
 	size_t cnt;
 	const char* str;
 	char* str2;
+	const char* desc;
 
 	/* Parse JSON string and getting root value and object */
 	root_value = json_parse_string(json);
@@ -320,32 +323,41 @@ void parse_data(const char* json, weather_t* weather_report)
 	desc_array = json_object_get_array(values, "lang_ru");
 	if (desc_array == NULL) {
 		fprintf(stderr, "Parse error: weather description array doesn't contain value.\n");
+		free(str2);
 		exit(EXIT_FAILURE);
 	}
 	if ((cnt = json_array_get_count(desc_array)) == 0) {
 		fprintf(stderr, "Parse error: weather description array doesn't contain any objects.\n");
+		free(str2);
 		exit(EXIT_FAILURE);
 	}
 
 	desc_array_value = json_array_get_value(desc_array, 0);
 	if (desc_array_value == NULL) {
 		fprintf(stderr, "Parse error: weather description array[0] doesn't contain values.\n");
+		free(str2);
 		exit(EXIT_FAILURE);
 	}
 	if ((typeval = json_value_get_type(desc_array_value)) != JSONObject) {
 		fprintf(stderr, "Parse error: incorrect desc_array_value. Expected JSONObject, got %s\n", get_js_type_str(typeval));
+		free(str2);
         exit(EXIT_FAILURE);
     }
 
 	desc_object = json_value_get_object(desc_array_value);
 	if (desc_object == NULL) {
 		fprintf(stderr, "Got null!\n");
+		free(str2);
 		exit(EXIT_FAILURE);
 	}
 
-	weather_report->desc = json_object_get_string(desc_object, "value");
-	if (weather_report->desc == NULL) {
-		fprintf(stderr, "Got null!\n");
+	desc = json_object_get_string(desc_object, "value");
+	if (desc == NULL) {
+		fprintf(stderr, "Got null weather desc!\n");
+		free(str2);
 		exit(EXIT_FAILURE);
 	}
+	weather_report->desc = malloc(strlen(desc)+1);
+	weather_report->desc = memcpy((void*) weather_report->desc, desc, strlen(desc)+1);
+	json_value_free(root_value);
 }
