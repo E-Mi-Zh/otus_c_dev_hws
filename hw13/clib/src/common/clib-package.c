@@ -657,6 +657,7 @@ clib_package_new_from_slug_with_package_name(const char *slug, int verbose,
 #ifdef HAVE_PTHREADS
       init_curl_share();
       _debug("GET %s", json_url);
+      if (res != NULL) http_get_free(res);
       res = http_get_shared(json_url, clib_package_curl_share);
 #else
       res = http_get(json_url);
@@ -1380,7 +1381,9 @@ int clib_package_install(clib_package_t *pkg, const char *dir, int verbose) {
 #ifdef HAVE_PTHREADS
     pthread_mutex_lock(&lock.mutex);
 #endif
-    hash_set(visited_packages, strdup(pkg->name), "t");
+    if (!hash_get(visited_packages, pkg->name)) { // check if hash key already exists
+      hash_set(visited_packages, strdup(pkg->name), "t");
+    }
 #ifdef HAVE_PTHREADS
     pthread_mutex_unlock(&lock.mutex);
 #endif
@@ -1489,7 +1492,7 @@ download:
       while (--i >= 0) {
         fetch_package_file_thread_data_t *data = fetchs[i];
         int *status = 0;
-        pthread_join(data->thread, (void **)status);
+        pthread_join(data->thread, (void **)&status);
         free(data);
         fetchs[i] = NULL;
 
@@ -1519,7 +1522,7 @@ download:
     fetch_package_file_thread_data_t *data = fetchs[i];
     int *status = 0;
 
-    pthread_join(data->thread, (void **)status);
+    pthread_join(data->thread, (void **)&status);
 
     (void)pending--;
     free(data);
