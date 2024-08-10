@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <threads.h>
+#include <execinfo.h>
 #include "logger.h"
 
 
@@ -13,10 +14,15 @@ mtx_t mtx;
 
 #define LFILE logfile ? logfile : stderr
 
-_Atomic int level_en[LMAX] = {0, 0, 0, 0}; 
+_Atomic int level_en[LMAX] = {0, 0, 0, 0};
 
 int loginit(const char* filename)
 {
+    void* dummy = NULL;
+
+	/* trigger libgcc load to memory); */
+    backtrace(&dummy, 1);
+
 	mtx_init(&mtx, mtx_plain);
 	mtx_lock(&mtx);
 	if ((logfile = fopen(filename, "a")) != NULL) {
@@ -56,6 +62,12 @@ void logprint(loglevel level, const char* file, int line, const char* func, cons
 		va_end(args);
 		fprintf(LFILE, "\n");
 		fflush(LFILE);
+		if ((level_en[LERR]) && (level == LERR)) {
+			void* symbols[100];
+			int n = backtrace(symbols, 100);
+			backtrace_symbols_fd(symbols, n, fileno(LFILE));
+			fflush(LFILE);
+		}
 		mtx_unlock(&mtx);
-	}		
+	}
 }
