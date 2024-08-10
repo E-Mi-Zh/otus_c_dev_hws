@@ -4,20 +4,26 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <threads.h>
 #include "logger.h"
 
 
 FILE* logfile;
+mtx_t mtx;
 
 #define LFILE logfile ? logfile : stderr
 
-int level_en[LMAX] = {0, 0, 0, 0}; 
+_Atomic int level_en[LMAX] = {0, 0, 0, 0}; 
 
 int loginit(const char* filename)
 {
+	mtx_init(&mtx, mtx_plain);
+	mtx_lock(&mtx);
 	if ((logfile = fopen(filename, "a")) != NULL) {
+		mtx_unlock(&mtx);
 		return EXIT_SUCCESS;
 	} else {
+		mtx_unlock(&mtx);
         	fprintf(stderr, "Error opening input file %s: %s! Falling back to stderr\n", filename, strerror(errno));
 		return EXIT_FAILURE;
 	}
@@ -41,6 +47,7 @@ void logprint(loglevel level, const char* file, int line, const char* func, cons
 	va_list args;
 
 	if (level_en[level]) {
+		mtx_lock(&mtx);
 		strftime(buf, sizeof(buf), "%F %T", localtime(&mytime));
 		fprintf(LFILE, "%s %s ", buf, levels[level]);
 		fprintf(LFILE, "%s:%d (%s) ", file, line, func);
@@ -49,5 +56,6 @@ void logprint(loglevel level, const char* file, int line, const char* func, cons
 		va_end(args);
 		fprintf(LFILE, "\n");
 		fflush(LFILE);
+		mtx_unlock(&mtx);
 	}		
 }
