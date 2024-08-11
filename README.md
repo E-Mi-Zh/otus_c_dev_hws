@@ -7,3 +7,4 @@
 * [hw\_13](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw13) - поиск и исправление утечек памяти с помощью Valgrind
 * [hw\_15](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw15) - рекурсивное отображение списка файлов в GTK4
 * [hw\_16](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw16) - библиотека журналирования
+* [hw\_20](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw20) - демон, прослушивающий UNIX сокет
