@@ -1,5 +1,5 @@
 #ifndef HASHTABLE_H
-#define HASTABLE_H
+#define HASHTABLE_H
 
 /* Максимальная длина слова */
 /* По статистике в русском и английском слова не более, чем 54-55 символов; взято с запасом */
@@ -26,8 +26,8 @@
 
 /* Ячейка массива слов */
 typedef struct {
-	char w[MAX_WORD_LENGTH];
-	unsigned int cnt;
+	char word[MAX_WORD_LENGTH];
+	unsigned int count;
 } wcnt_t;
 
 /* Хеш-таблица со словами */
@@ -35,9 +35,9 @@ typedef struct {
 	/* Размер массива слов */
 	unsigned int size;
 	/* Сколько занято ячеек */
-	unsigned int occ;
+	unsigned int occupied;
 	/* Максимально возможное количество занятых ячеек до расширения */
-	unsigned int max_occ;
+	unsigned int max_occupied;
 	/* Массив со словами */
 	wcnt_t* words;
 } hashtable_t;

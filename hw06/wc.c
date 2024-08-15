@@ -16,8 +16,8 @@ FILE* open_file(char* fname);
 
 int main(int argc, char* argv[])
 {
-	FILE* f;
-	char w[MAX_WORD_LENGTH];
+	FILE* input_file;
+	char word[MAX_WORD_LENGTH];
 	unsigned int i = 0;
 	int c;
 
@@ -27,26 +27,26 @@ int main(int argc, char* argv[])
 	/* Анализируем аргументы */
 	parse_args(argc);
 	/* Открываем файл */
-	f = open_file(argv[1]);
+	input_file = open_file(argv[1]);
 	/* Создаём массив слов */
 	hashtable = hashtable_new(HASHTABLE_SIZE);
 	/* Для каждого слова из файла */
 	do {
-		c = fgetc(f);
+		c = fgetc(input_file);
 		/* Определяем и сохраняем слово */
 		if (!isspace(c) && (c != EOF) && (i < MAX_WORD_LENGTH-1)) {
-			w[i] = c;
+			word[i] = c;
 			i++;
 			continue;
 		}
-		w[i] = '\0';
+		word[i] = '\0';
 		if (i > 0) {
-			hashtable = hashtable_add(hashtable, w);
+			hashtable = hashtable_add(hashtable, word);
 		}
 		i = 0;
 	} while (c != EOF);
 	/* Закрываем файл */
-	fclose(f);
+	fclose(input_file);
 
 	/* Печатаем таблицу */
 	hashtable_print(hashtable);
@@ -72,13 +72,13 @@ void print_usage(void)
 
 FILE* open_file(char* fname)
 {
-	FILE* f;
-	f = fopen(fname, "r");
-	if (f == NULL) {
+	FILE* input_file;
+	input_file = fopen(fname, "r");
+	if (input_file == NULL) {
 		fprintf(stderr, "Error opening input file %s: %s! Exiting...\n", fname, strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 
-	return f;
+	return input_file;
 }
 
