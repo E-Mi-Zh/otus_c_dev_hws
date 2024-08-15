@@ -17,13 +17,17 @@ gboolean populate_tree_model(GtkTreeStore *store, GFile *file)
 	GFileEnumerator *enumerator = NULL;
 	GFileInfo *fileinfo = NULL;
 	const char *relative_path;
+	char *filename = NULL;
+	char *basename = NULL;
 
 	filetype = g_file_query_file_type(file, G_FILE_QUERY_INFO_NONE, NULL);
 	if (filetype == G_FILE_TYPE_DIRECTORY) {
 		/* Добавляем текущий каталог */
 		gtk_tree_store_append(store, &iter1, NULL);
+		filename = g_file_get_parse_name(file);
 		gtk_tree_store_set(store, &iter1, FILENAME_COLUMN,
-				   g_file_get_parse_name(file), -1);
+				   filename, -1);
+		g_free(filename);
 		enumerator =
 		    g_file_enumerate_children(file,
 					      G_FILE_ATTRIBUTE_STANDARD_NAME,
@@ -39,12 +43,17 @@ gboolean populate_tree_model(GtkTreeStore *store, GFile *file)
 			populate_tree_model(store,
 					    g_file_resolve_relative_path(file,
 									 relative_path));
+			g_object_unref(fileinfo);
 		}
+		g_file_enumerator_close (enumerator, NULL, &error);
+		g_object_unref(enumerator);
 	} else if (filetype == G_FILE_TYPE_REGULAR) {
 		/* обычный файл, добавляем в дерево, с учётом родительского итератора */
 		gtk_tree_store_append(store, &iter2, &iter1);
+		basename = g_file_get_basename(file);
 		gtk_tree_store_set(store, &iter2, FILENAME_COLUMN,
-				   g_file_get_basename(file), -1);
+				   basename, -1);
+		g_free(basename);
 	}
 
 	return TRUE;
