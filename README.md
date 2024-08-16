@@ -8,3 +8,4 @@
 * [hw\_15](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw15) - рекурсивное отображение списка файлов в GTK4
 * [hw\_16](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw16) - библиотека журналирования
 * [hw\_20](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw20) - демон, прослушивающий UNIX сокет
+* [hw\_21](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw21) - расчёт CRC32 большого файла с использованием mmap
