@@ -106,7 +106,7 @@ int main(void)
 	puts(empty_str);
 
 	/* здесь была утечка, т.к. в исходном листинге списки не освобождались */
-//	free_list(numbers_list);
+	free_list(numbers_list);
 	free_list(list2);
 
 	return 0;
