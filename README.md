@@ -10,6 +10,7 @@
 * [hw\_16](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw16) - библиотека журналирования
 * [hw\_20](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw20) - демон, прослушивающий UNIX сокет
 * [hw\_21](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw21) - расчёт CRC32 большого файла с использованием mmap
+* [hw\_22](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw22) - парсинг логов Apache в несколько потоков
 * [hw\_25](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw25) - печать figlet с писпользованием telehack.com
 * [hw\_32](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw32) - расчёт статистики для базы данных
 * [hw\_33](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw33) - вращающийся куб
