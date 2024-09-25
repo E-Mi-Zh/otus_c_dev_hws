@@ -15,4 +15,5 @@
 * [hw\_27](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw27) - простой HTTP сервер с использованием epoll
 * [hw\_32](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw32) - расчёт статистики для базы данных
 * [hw\_33](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw33) - вращающийся куб
+* [hw\_35](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/hw35) - Тетрис
 * [final\_project](https://github.com/E-Mi-Zh/otus_c_dev_hws/tree/master/final_project) - виртуальный L2 switch
